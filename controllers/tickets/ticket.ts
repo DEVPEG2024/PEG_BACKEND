@@ -48,10 +48,12 @@ export const getTickets = async (req: Request, res: Response) => {
 // Create new ticket
 export const createTicket = async (req: Request, res: Response) => {
   try {
-    const { ticket, userId } = req.body;
+    const { ticket, userId } = req.body,
+      reference = (new Date().getMilliseconds()).toString(10) + '-' + Math.floor(Math.random() * 30)
 
+      console.log('reference : ' + reference)
     const newTicket = new Ticket({
-      ref: ticket.ref,
+      ref: reference,
       user: userId,
       team: null,
       file: ticket.file,
