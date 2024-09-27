@@ -48,10 +48,12 @@ export const getBanners = async (req: Request, res: Response) => {
 // Create new banner
 export const createBanner = async (req: Request, res: Response) => {
   try {
-    const { banner } = req.body;
+    const { banner } = req.body,
+      reference = (new Date().getMilliseconds()).toString(10) + '-' + Math.floor(Math.random() * 30);
+      
     console.log(banner)
     const newBanner = new Banner({
-      ref: banner.ref,
+      ref: reference,
       title: banner.title,
       customer: banner.customer || null,
       customerCategory: banner.customerCategory || null,

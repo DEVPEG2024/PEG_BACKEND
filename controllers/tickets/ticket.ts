@@ -51,7 +51,6 @@ export const createTicket = async (req: Request, res: Response) => {
     const { ticket, userId } = req.body,
       reference = (new Date().getMilliseconds()).toString(10) + '-' + Math.floor(Math.random() * 30)
 
-      console.log('reference : ' + reference)
     const newTicket = new Ticket({
       ref: reference,
       user: userId,
