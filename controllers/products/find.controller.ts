@@ -52,22 +52,35 @@ export const getProductsByCustomer = async (req: Request, res: Response) => {
     const pageSize = parseInt(req.query.pageSize as string) || 10;
     const searchTerm = req.query.searchTerm as string || "";
     const customerId = req.query.userId as string || "";
+    const customerCategoryId = req.query.userCategoryId as string || "";
     const skip = (page - 1) * pageSize;
 
-    const searchQuery = {
-      customers: { $in: [customerId] },
-      status: "online",
-      ...(searchTerm
-        ? {
-            $or: [
-              { title: { $regex: searchTerm, $options: "i" } },
-              { description: { $regex: searchTerm, $options: "i" } },
-            ],
+    const searchQuery = [
+      {
+          $match: {
+              $or: [
+                  { title: { $regex: searchTerm, $options: 'i' } },
+                  { description: { $regex: searchTerm, $options: 'i' } }
+              ]
           }
-        : {}),
-    };
+      },
+      {
+          $match: {
+              $and: [
+                  {
+                      $or: [
+                          { customers: { $in: [customerId] } },
+                          { customersCategories: { $in: [customerCategoryId] }, customers: { $size: 0 } },
+                          { customersCategories: { $size: 0 }, customers: { $size: 0 } }
+                      ]
+                  },
+                  { status: "online" }
+              ]
+          }
+      }
+    ]
 
-    const products = await Product.find(searchQuery)     
+    const products = await Product.aggregate(searchQuery)     
     .sort({ createdAt: -1 }) 
       .skip(skip)
       .limit(pageSize);
