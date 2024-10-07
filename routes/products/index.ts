@@ -1,7 +1,7 @@
 import express from 'express';
 const router = express.Router();
 import authMiddleware from '../../middleware/authMiddleware';
-import { findProductsByCategory, getProducts, getProductsByCustomer } from '../../controllers/products/find.controller';
+import { findProductsByCategory, getProducts, getProductsByCustomer, getProductById } from '../../controllers/products/find.controller';
 import { createProduct } from '../../controllers/products/create.controller';
 import { updateProduct, updateProductStatus } from '../../controllers/products/update.controller';
 import { deleteProduct } from '../../controllers/products/delete.controller';
@@ -24,4 +24,6 @@ router.delete('/admin/category-product/delete/:id', authMiddleware, deleteCatego
 router.get('/customer', authMiddleware, getProductsByCustomer);
 router.get('/category/:id', authMiddleware, findProductsByCategory);
 
+// Autres
+router.get('/:id', authMiddleware, getProductById);
 export default router;
