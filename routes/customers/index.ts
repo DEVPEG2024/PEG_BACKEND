@@ -1,12 +1,12 @@
 import express from 'express';
 const router = express.Router();
 import authMiddleware from '../../middleware/authMiddleware';
-import { getCustomers } from '../../controllers/custumers/find.controller';
-import { createCategoryCustomer, updateCategoryCustomerById, getCategoriesCustomer, deleteCategoryCustomerById } from '../../controllers/custumers/cat_customer.controller';
-import { createCustomer } from '../../controllers/custumers/create.controller';
-import { updateCustomer, updateCustomerStatus } from '../../controllers/custumers/update.controller';
-import { deleteCustomer } from '../../controllers/custumers/delete.controller';
-import { getDashboardHomeCustomer } from '../../controllers/custumers/home_customer.controller';
+import { getCustomers } from '../../controllers/customers/find.controller';
+import { createCategoryCustomer, updateCategoryCustomerById, getCategoriesCustomer, deleteCategoryCustomerById } from '../../controllers/customers/cat_customer.controller';
+import { createCustomer } from '../../controllers/customers/create.controller';
+import { updateCustomer, updateCustomerStatus } from '../../controllers/customers/update.controller';
+import { deleteCustomer } from '../../controllers/customers/delete.controller';
+import { getDashboardHomeCustomer } from '../../controllers/customers/home_customer.controller';
 // Customer
 router.get('/admin/', authMiddleware, getCustomers);
 router.post('/admin/create', authMiddleware, createCustomer);

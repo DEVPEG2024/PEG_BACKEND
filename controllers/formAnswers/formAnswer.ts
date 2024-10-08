@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import Form from '../../models/forms';
+import FormAnswer from '../../models/formAnswers';
 
 // Create new formAnswer
 export const createFormAnswer = async (req: Request, res: Response) => {
@@ -9,33 +9,33 @@ export const createFormAnswer = async (req: Request, res: Response) => {
           formId,
           fields,
         });
-        const savedForm = await newFormAnswer.save();
-        res.status(201).json({ result: true, message: 'Form créé', form: savedForm });
+        const savedFormAnswer = await newFormAnswer.save();
+        res.status(201).json({ result: true, message: 'Réponse créée', formAnswer: savedFormAnswer });
       } catch (error) {
         console.log(error);
-        res.status(400).json({ result: false, message: 'Erreur lors de la création du form', error });
+        res.status(400).json({ result: false, message: 'Erreur lors de la création de la réponse', error });
       }
 };
 
-// Update form
-export const updateForm = async (req: Request, res: Response) => { 
+// Update formAnswer
+export const updateFormAnswer = async (req: Request, res: Response) => { 
     try {
         const { id } = req.params;
         const { title, fields } = req.body;
-        const updatedForm = await Form.findByIdAndUpdate(id, { title, fields }, { new: true });
-        res.json({ result: true, message: 'Formulaires modifié avec succès', form: updatedForm });
+        const updatedFormAnswer = await FormAnswer.findByIdAndUpdate(id, { title, fields }, { new: true });
+        res.json({ result: true, message: 'Réponse modifiée avec succès', form: updatedFormAnswer });
       } catch (error) {
-        res.status(500).json({ result: false, message: 'Erreur lors de la modification du formulaire', error: (error as Error).message });
+        res.status(500).json({ result: false, message: 'Erreur lors de la modification de la réponse', error: (error as Error).message });
       }
 };
 
-// Delete form
-export const deleteForm = async (req: Request, res: Response) => { 
+// Delete formAnswer
+export const deleteFormAnswer = async (req: Request, res: Response) => { 
     try {
         const { id } = req.params;
-        await Form.findByIdAndDelete(id);
-        res.json({ result: true, message: 'Formulaires supprimé avec succès' });
+        await FormAnswer.findByIdAndDelete(id);
+        res.json({ result: true, message: 'Réponse supprimée avec succès' });
       } catch (error) {
-        res.status(500).json({ result: false, message: 'Erreur lors de la suppression du formulaire', error: (error as Error).message });
+        res.status(500).json({ result: false, message: 'Erreur lors de la suppression de la réponse', error: (error as Error).message });
       }
 };

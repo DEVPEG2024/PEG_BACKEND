@@ -1,24 +1,21 @@
-import mongoose, { Schema, Document } from 'mongoose';
+import mongoose, { Schema, Document, ObjectId } from 'mongoose';
 
 export interface IFormAnswer extends Document {
-  _id: string;
-  formId: string;
-  answers: [
-    {
-      fieldId: string;
-      value: string | string[] | File[];
-    }
-  ]
+  formId: ObjectId;
+  answers: Record<string, any>,
+  customerId: ObjectId,
+  productId: ObjectId,
   createdAt: Date;
+  updatedAt: Date;
 }
 
 const FormAnswerSchema: Schema = new Schema({
-  formId: { type: String, required: true },
-  answers: [{
-    fieldId: {type: String, required: true, default: 'id'},
-    value: { type: String, required: true, default: 0 }
-  }],
-  createdAt: { type: Date, default: Date.now }
+  formId: { type: Schema.Types.ObjectId, ref: 'Form', required: true },
+  answers: {type: Schema.Types.Mixed, required: true},
+  customerId: { type: Schema.Types.ObjectId, ref: 'Customer', required: true },
+  productId: { type: Schema.Types.ObjectId, ref: 'Product', required: true },
+  createdAt: { type: Date, default: Date.now },
+  updatedAt: { type: Date, default: Date.now }
 });
 
 export default mongoose.model<IFormAnswer>('FormAnswer', FormAnswerSchema);
