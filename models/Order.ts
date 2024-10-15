@@ -26,16 +26,12 @@ export interface IOrder extends Document {
 
 const OrderSchema: Schema = new Schema({
   customerId: { type: Schema.Types.ObjectId, ref: 'User', required: true,  autopopulate: true },
-  orderItems: [
+  productId: { type: Schema.Types.ObjectId, ref: 'Product', required: true},
+  formAnswerId: { type: Schema.Types.ObjectId, ref: 'FormAnswer', required: true},
+  sizes: [
     {
-      productId: { type: Schema.Types.ObjectId, ref: 'Product', required: true},
-      formAnswerId: { type: Schema.Types.ObjectId, ref: 'FormAnswer', required: true},
-      sizes: [
-        {
-          value: {type: String, required: true, default: 'default'},
-          quantity: { type: Number, required: true, default: 0 }
-        }
-      ]
+      value: {type: String, required: true, default: 'default'},
+      quantity: { type: Number, required: true, default: 0 }
     }
   ],
   orderNumber: { type: String, required: true, default: null },

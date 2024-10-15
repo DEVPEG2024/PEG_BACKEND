@@ -4,10 +4,12 @@ import FormAnswer from '../../models/formAnswers';
 // Create new formAnswer
 export const createFormAnswer = async (req: Request, res: Response) => {
     try {
-        const { formId, fields } = req.body;
+        const { formId, answers, customerId, productId } = req.body;
         const newFormAnswer = new FormAnswer({
           formId,
-          fields,
+          answers,
+          customerId,
+          productId
         });
         const savedFormAnswer = await newFormAnswer.save();
         res.status(201).json({ result: true, message: 'Réponse créée', formAnswer: savedFormAnswer });
