@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import Order from '../../models/Product';
+import Order from '../../models/Order';
 
 // Get all orders
 export const getOrders = async (req: Request, res: Response) => {
@@ -105,26 +105,6 @@ export const getOngoingOrdersByCustomer = async (req: Request, res: Response) =>
     res.status(500).json({
       result: false,
       message: 'Erreur lors de la récupération des commandes',
-      error: (error as Error).message
-    });
-  }
-};
-
-
-// find products by category
-export const findProductsByCategory = async (req: Request, res: Response) => {
-  try {
-    const categoryId = req.params.id;
-    const products = await Order.find({ category: { $in: [categoryId] } });
-    res.json({
-      result: true,
-      products,
-      message: 'Produits récupérées avec succès'
-    });
-  } catch (error) {
-    res.status(500).json({
-      result: false,
-      message: 'Erreur lors de la récupération des produits',
       error: (error as Error).message
     });
   }

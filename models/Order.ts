@@ -3,17 +3,16 @@ import mongooseAutopopulate from 'mongoose-autopopulate';
 
 export interface IOrder extends Document {
   _id: string;
-  customerId: ObjectId;
-  orderItems: [
-    productId: ObjectId,
-    formAnswerId: ObjectId,
-    sizes: [
-      {
-        value: string;
-        quantity: number
-      }
-    ]
-  ];
+  customer: ObjectId;
+  product: ObjectId;
+  formAnswerId: ObjectId,
+  sizes: [
+    {
+      value: string;
+      quantity: number
+    }
+  ]
+  total: number;
   orderNumber: string;
   paymentMethod: string;
   status: string;
@@ -25,8 +24,16 @@ export interface IOrder extends Document {
 }
 
 const OrderSchema: Schema = new Schema({
-  customerId: { type: Schema.Types.ObjectId, ref: 'User', required: true,  autopopulate: true },
-  productId: { type: Schema.Types.ObjectId, ref: 'Product', required: true},
+  customer: { type: Schema.Types.ObjectId, ref: "User", required: true, 
+    autopopulate: {
+      select: "companyName firstName lastName _id"
+    }
+  },
+  product: { type: Schema.Types.ObjectId, ref: 'Product', required: true,
+    autopopulate: {
+      select: "title _id"
+    }
+  },
   formAnswerId: { type: Schema.Types.ObjectId, ref: 'FormAnswer', required: true},
   sizes: [
     {
@@ -34,9 +41,10 @@ const OrderSchema: Schema = new Schema({
       quantity: { type: Number, required: true, default: 0 }
     }
   ],
+  total: { type: Number, required: true, default: 0 },
   orderNumber: { type: String, required: true, default: null },
   paymentMethod: { type: String, required: false, default: null },
-  status: { type: String, required: false, default: 'En attente' },
+  status: { type: String, required: false, default: 'pending' },
   message: { type: String, required: false, default: null },
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now },
