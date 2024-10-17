@@ -5,7 +5,7 @@ export interface IOrder extends Document {
   _id: string;
   customer: ObjectId;
   product: ObjectId;
-  formAnswerId: ObjectId,
+  formAnswer: ObjectId,
   sizes: [
     {
       value: string;
@@ -34,7 +34,11 @@ const OrderSchema: Schema = new Schema({
       select: "title _id"
     }
   },
-  formAnswerId: { type: Schema.Types.ObjectId, ref: 'FormAnswer', required: true},
+  formAnswer: { type: Schema.Types.ObjectId, ref: 'FormAnswer', required: true,
+    autopopulate: {
+      select: "answers"
+    }
+  },
   sizes: [
     {
       value: {type: String, required: true, default: 'default'},
