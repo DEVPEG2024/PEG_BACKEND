@@ -1,5 +1,6 @@
 import express from 'express';
 import { Request, Response } from 'express';
+import fs from 'fs';
 
 import path from 'path';
 import multer from 'multer';
@@ -33,8 +34,23 @@ router.post('/', upload.single('file'), (req: Request & { file?: Express.Multer.
   }
 });
 
+// Route pour récupérer un fichier
+router.get('/:filename', (req: Request, res: Response) => {
+  const filename = req.params.filename;
+  const filepath = path.join(__dirname, '../../public/uploads', filename);
 
-// Route pour télécharger un nouveau avatar
+  // Vérification si le fichier existe
+  fs.access(filepath, fs.constants.F_OK, (err) => {
+    if (err) {
+      return res.status(404).json({ message: 'Fichier non trouvé' });
+    }
+
+    // Envoyer le fichier en réponse
+    res.sendFile(filepath);
+  });
+});
+
+// Route pour télécharger un nouvel avatar
 router.post('/avatar/:id', upload.single('file'), async (req: Request & { file?: Express.Multer.File }, res: Response) => {
   if (!req.is("multipart/form-data")) {
     return res
@@ -66,6 +82,22 @@ router.post('/avatar/:id', upload.single('file'), async (req: Request & { file?:
         result: false,
       });
   }
+});
+
+router.delete('/delete/:filename', (req: Request, res: Response) => {
+  const filename: string = req.params.filename;
+  const filepath: string = path.join(__dirname, '../../public/uploads', filename);
+
+  // Vérifier si le fichier existe avant de le supprimer
+  fs.unlink(filepath, (err) => {
+    if (err) {
+      return res.status(400).json({
+        message: 'Erreur lors de la suppression du fichier ou fichier introuvable.',
+        error: err.message
+      });
+    }
+    res.json({ message: 'Fichier supprimé avec succès' });
+  });
 });
 
 

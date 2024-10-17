@@ -1,6 +1,6 @@
 import mongoose, { Schema, Document } from 'mongoose';
 
-interface IFormField extends Document {
+interface IField extends Document {
   id: string;
   type: string;
   label: string;
@@ -15,16 +15,16 @@ interface IFormField extends Document {
   defaultColor?: string;
 }
 
-export interface IFormCollection extends Document {
+export interface IForm extends Document {
   title: string;
-  fields: IFormField[];
+  fields: IField[];
   createdAt: Date;
   updatedAt: Date;
   deletedAt: Date | null;
   deleted: boolean;
 }
 
-const FormFieldSchema: Schema = new Schema({
+const FieldSchema: Schema = new Schema({
   id: { type: String, required: true },
   type: { type: String, required: true },
   label: { type: String, required: true },
@@ -39,13 +39,13 @@ const FormFieldSchema: Schema = new Schema({
   defaultColor: { type: String },
 });
 
-const FormCollectionSchema: Schema = new Schema({
+const FormSchema: Schema = new Schema({
   title: { type: String, required: true },
-  fields: [FormFieldSchema],
+  fields: [FieldSchema],
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now },
   deletedAt: { type: Date, default: null },
   deleted: { type: Boolean, default: false },
 });
 
-export default mongoose.model<IFormCollection>('Form', FormCollectionSchema);
+export default mongoose.model<IForm>('Form', FormSchema);

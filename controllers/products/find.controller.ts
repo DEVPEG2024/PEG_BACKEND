@@ -44,6 +44,16 @@ export const getProducts = async (req: Request, res: Response) => {
   }
 };
 
+// Get product by ID 
+export const getProductById = async (req: Request, res: Response) => {
+  try {
+      const { id } = req.params;
+      const product = await Product.findById(id);
+      res.json({ result: true, message: 'Produit trouvé avec succès', product });
+    } catch (error) {
+      res.status(500).json({ result: false, message: 'Erreur lors de la recherche du produit', error: (error as Error).message });
+    }
+};
 
 // Get all products by customer
 export const getProductsByCustomer = async (req: Request, res: Response) => {

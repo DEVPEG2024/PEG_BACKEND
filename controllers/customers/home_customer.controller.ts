@@ -19,12 +19,12 @@ export const getDashboardHomeCustomer = async (req: Request, res: Response) => {
       banner,
       products,
       level,
-      message: 'Clients récupérées avec succès'
+      message: 'Commandes récupérées avec succès'
     });
   } catch (error) {
     res.status(500).json({
       result: false,
-      message: 'Erreur lors de la récupération des clients',
+      message: 'Erreur lors de la récupération des commandes',
       error: (error as Error).message
     });
   }

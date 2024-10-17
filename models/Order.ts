@@ -1,87 +1,59 @@
-import mongoose, { Document, Schema } from 'mongoose';
+import mongoose, { Document, ObjectId, Schema } from 'mongoose';
 import mongooseAutopopulate from 'mongoose-autopopulate';
 
 export interface IOrder extends Document {
   _id: string;
-  customer: string;
-  products: [
+  customer: ObjectId;
+  product: ObjectId;
+  formAnswer: ObjectId,
+  sizes: [
     {
-      product: string,
-      quantity: number,
-      promoPrice: number,
-      price: number,
-      total: number,
-      available: boolean,
-      replaced: boolean,
-      replacedProduct: string,
-      _id: string,
+      value: string;
+      quantity: number
     }
-  ];
-  orderNumber: string;
-  storeId: string;
-  subtotal: number;
-  discount: number;
-  promoPrice: number;
-  vat: number;
+  ]
   total: number;
-  coupon: string;
-  pickup: boolean;
-  pickupDate: Date;
+  orderNumber: string;
   paymentMethod: string;
-  qrCode: string;
   status: string;
-  pickupOrderAt: Date;
-  pickupOrderTimeAt: string;
-  paymentIntentId: string;
-  substitution: boolean;
-  inPark: boolean;
-  bags: boolean;
-  message: string;
+  message: string; //TODO: à compléter côté front
   createdAt: Date;
   updatedAt: Date;
-  refunded: boolean;
-  amountRefunded: number;
   deletedAt: Date | null;
   canceled: boolean;
 }
 
 const OrderSchema: Schema = new Schema({
-  customer: { type: Schema.Types.ObjectId, ref: 'User', required: false,  autopopulate: true },
-  orderNumber: { type: String, required: false, default: null },
-  storeId: { type: Schema.Types.ObjectId, ref: 'Store', required: false,  autopopulate: true},
-  inPark: { type: Boolean, required: false, default: false },
-  promoPrice: { type: Number, required: false, default: 0 },
-  products: [{
-    product: { type: Schema.Types.ObjectId, ref: 'Product', required: false, autopopulate: true },
-    quantity: { type: Number, required: false, default: 0 },
-    price: { type: Number, required: false, default: 0 },
-    total: { type: Number, required: false, default: 0 },
-    available: { type: Boolean, required: false, default: false },
-    replaced: { type: Boolean, required: false, default: false },
-    replacedProduct: { type: Schema.Types.ObjectId, ref: 'Product', required: false, autopopulate: true, default: null },
-  }],
-  subtotal: { type: Number, required: false, default: 0 },
-  discount: { type: Number, required: false, default: 0 },
-  vat: { type: Number, required: false, default: 0 },
-  total: { type: Number, required: false, default: 0 },
-  coupon: { type: String, required: false, default: null },
-  pickup: { type: Boolean, required: false, default: false },
-  pickupDate: { type: Date, required: false, default: null },
-  pickupTime: { type: String, required: false, default: null },
-  pickupOrderAt: { type: Date, required: false, default: null },
+  customer: { type: Schema.Types.ObjectId, ref: "User", required: true, 
+    autopopulate: {
+      select: "companyName firstName lastName _id"
+    }
+  },
+  product: { type: Schema.Types.ObjectId, ref: 'Product', required: true,
+    autopopulate: {
+      select: "title _id"
+    }
+  },
+  formAnswer: { type: Schema.Types.ObjectId, ref: 'FormAnswer', required: true,
+    autopopulate: {
+      select: "answers"
+    }
+  },
+  sizes: [
+    {
+      value: {type: String, required: true, default: 'default'},
+      quantity: { type: Number, required: true, default: 0 }
+    }
+  ],
+  total: { type: Number, required: true, default: 0 },
+  orderNumber: { type: String, required: true, default: null },
   paymentMethod: { type: String, required: false, default: null },
-  qrCode: { type: String, required: false, default: null },
-  status: { type: String, required: false, default: 'En attente' },
-  substitution: { type: Boolean, required: false, default: false },
-  bags: { type: Boolean, required: false, default: false },
+  status: { type: String, required: false, default: 'pending' },
   message: { type: String, required: false, default: null },
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now },
   deletedAt: { type: Date, default: null },
   canceled: { type: Boolean, default: false },
-  refunded: { type: Boolean, default: false },
-  amountRefunded: { type: Number, default: 0 },
-  paymentIntentId: { type: String, required: false, default: null },
 });
 
 OrderSchema.plugin(mongooseAutopopulate);

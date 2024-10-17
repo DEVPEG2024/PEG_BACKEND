@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import Project from '../../models/Project';
 
-// Create new producer
+// Create new project
 export const createProject = async (req: Request, res: Response) => {
   try {
     const { title, description, amount, amountProducers, customer, producer, startDate, endDate, ref, priority, status } = req.body;
