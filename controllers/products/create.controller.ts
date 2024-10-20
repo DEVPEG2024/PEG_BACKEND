@@ -1,23 +1,16 @@
 import { Request, Response } from 'express';
 import Product from '../../models/Product';
-import CategoryProduct from '../../models/CategoryProduct';
+import CategoryProduct, { ICategoryProduct } from '../../models/CategoryProduct';
 
 // Create new product
-export const createProduct = async (req: Request, res: Response) => {
+export const createProduct = async (req: Request, res: Response): Promise<void> => {
   try {
     const data = req.body;
     delete data._id;
     const product = new Product(data);
-    const categoryProduct = await CategoryProduct.findById(data.category);
-    if (!categoryProduct) {
-      return res.status(400).json({
-        result: false,
-        message: "Catégorie de produit non trouvée",
-      });
-    }
+    const categoriesProduct = await getCategoriesLinked(data.category)
     const newIdProduct = product._id as unknown as string;
-    categoryProduct.products.push(newIdProduct);
-    await categoryProduct.save();
+    categoriesProduct.forEach((category) => addProductToCategory(category, newIdProduct))
     await product.save();
     res.status(200).json({
       result: true,
@@ -28,8 +21,27 @@ export const createProduct = async (req: Request, res: Response) => {
     console.log(error);
     res.status(500).json({
       result: false,
-      message: "Erreur lors de la création du projet",
+      message: "Erreur lors de la création du produit",
       error,
     });
   }
 };
+
+const getCategoriesLinked = async (categories: string[]): Promise<ICategoryProduct[]> => {
+  if (categories.length > 0) {
+    const categoriesLinked: (ICategoryProduct | null)[] = await Promise.all(categories.map(async (categoryName: string) => {
+      const category = await CategoryProduct.findById(categoryName)
+
+      return category
+    }))
+
+    return categoriesLinked.filter((category): category is ICategoryProduct => category !== null)
+  }
+
+  return CategoryProduct.find()
+}
+
+const addProductToCategory = async (category: ICategoryProduct, newIdProduct: string) : Promise<void> => {
+  category.products.push(newIdProduct);
+  await category.save();
+}
