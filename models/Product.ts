@@ -62,7 +62,7 @@ const ProductSchema = new Schema<IProduct>({
     date: { type: Date, required: false, default: Date.now },
     category: { type: [String], ref: 'Category_Product', required: false },
     customersCategories: { type: [String], ref: 'Category_Customer', required: false },
-    form: { type: Schema.Types.ObjectId, ref: 'Form', required: true,  autopopulate: {
+    form: { type: [String], ref: 'Form', required: false,  autopopulate: {
       select: '_id title fields'
     } },
     customers: { type: [String], ref: 'User', required: false },
