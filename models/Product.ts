@@ -8,9 +8,9 @@ export type IProduct = {
   stock: number,
   category: string[],
   customersCategories: string[],
-  form: mongoose.Schema.Types.ObjectId;
+  form: string;
   customers: string[],
-  images: string[],
+  images: FileNameBackFront[],
   isActive: boolean,
   isDeleted: boolean,
   date: Date,
@@ -38,6 +38,16 @@ export type OptionsFields = {
   stock: number;
 };
 
+export type FileNameBackFront = {
+  fileNameBack: string
+  fileNameFront: string
+}
+
+const FileNameBackFrontSchema = new Schema<FileNameBackFront>({
+  fileNameBack: { type: String, required: true },
+  fileNameFront: { type: String, required: true }
+});
+
 const OptionsFieldsSchema = new Schema<OptionsFields>({
   label: { type: String, required: true },
   value: { type: String, required: true },
@@ -56,13 +66,13 @@ const ProductSchema = new Schema<IProduct>({
     description: { type: String, required: true },
     amount: { type: Number, required: true },
     stock: { type: Number, required: false, default: 0 },
-    images: { type: [String], required: false },
+    images: { type: [FileNameBackFrontSchema], required: false },
     isActive: { type: Boolean, required: false, default: true },
     isDeleted: { type: Boolean, required: false, default: false },
     date: { type: Date, required: false, default: Date.now },
     category: { type: [String], ref: 'Category_Product', required: false },
     customersCategories: { type: [String], ref: 'Category_Customer', required: false },
-    form: { type: [String], ref: 'Form', required: false,  autopopulate: {
+    form: { type: String, ref: 'Form', required: false,  autopopulate: {
       select: '_id title fields'
     } },
     customers: { type: [String], ref: 'User', required: false },
