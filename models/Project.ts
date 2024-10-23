@@ -1,5 +1,6 @@
-import mongoose, { Document, Schema } from 'mongoose';
+import mongoose, { Document, ObjectId, Schema } from 'mongoose';
 import autopopulate from 'mongoose-autopopulate';
+import { IOrder } from './Order';
 
 export interface IComment extends Document {
   _id: mongoose.Types.ObjectId;
@@ -51,6 +52,7 @@ export interface IProject extends Document {
   comments: IComment[];
   files: IFile[];
   tasks: ITask[];
+  order: ObjectId;
   createdAt: Date;
   updatedAt: Date;
   deletedAt: Date | null;
@@ -94,7 +96,7 @@ const ProjectSchema: Schema = new Schema({
   endDate: { type: Date, required: true },
   status: { type: String, required: true },
   customer: { type: Schema.Types.ObjectId, ref: 'User', required: true, autopopulate: true },
-  producer: { type: Schema.Types.ObjectId, ref: 'User', required: true, autopopulate: true },
+  producer: { type: Schema.Types.ObjectId, ref: 'User', required: false, autopopulate: true },
   amount: { type: Number, required: true, default: 0 },
   progress: { type: Number, required: true, default: 0 },
   amountPaid: { type: Number, required: true, default: 0 },
@@ -107,6 +109,7 @@ const ProjectSchema: Schema = new Schema({
   comments: [CommentSchema],
   files: [FileSchema],
   tasks: [TasksSchema],
+  order: { type: Schema.Types.ObjectId, ref: 'Order', required: false, autopopulate: true },
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now },
   deletedAt: { type: Date, default: null },
