@@ -29,12 +29,8 @@ const OrderSchema: Schema = new Schema({
       select: "companyName firstName lastName _id"
     }
   },
-  product: { type: Schema.Types.ObjectId, ref: 'Product', required: true,
-    autopopulate: {
-      select: "title _id"
-    }
-  },
-  formAnswer: { type: Schema.Types.ObjectId, ref: 'FormAnswer', required: true,
+  product: { type: Schema.Types.ObjectId, ref: 'Product', required: true, autopopulate: true},
+  formAnswer: { type: Schema.Types.ObjectId, ref: 'FormAnswer', required: false,
     autopopulate: {
       select: "answers"
     }

@@ -4,7 +4,7 @@ import Project from '../../models/Project';
 // Create new project
 export const createProject = async (req: Request, res: Response) => {
   try {
-    const { title, description, amount, amountProducers, customer, producer, startDate, endDate, ref, priority, status } = req.body;
+    const { title, description, amount, amountProducers, customer, producer, startDate, endDate, ref, priority, status, order } = req.body;
     const amountRound = Number(amount);
     const amountProducersRound = Number(amountProducers);
     const project = new Project({
@@ -21,6 +21,7 @@ export const createProject = async (req: Request, res: Response) => {
       endDate: endDate || new Date(),
       status: status || 'pending',
       priority: priority || 'low',
+      order,
     });
     await project.save();
     res.status(200).json({
