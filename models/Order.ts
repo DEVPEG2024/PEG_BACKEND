@@ -14,7 +14,7 @@ export interface IOrder extends Document {
   ]
   total: number;
   orderNumber: string;
-  paymentMethod: string;
+  paymentStatus: string;
   status: string;
   message: string; //TODO: à compléter côté front
   createdAt: Date;
@@ -43,8 +43,8 @@ const OrderSchema: Schema = new Schema({
   ],
   total: { type: Number, required: true, default: 0 },
   orderNumber: { type: String, required: true, default: null },
-  paymentMethod: { type: String, required: false, default: null },
-  status: { type: String, required: false, default: 'pending' },
+  paymentStatus: { type: String, required: true, default: 'PENDING' },
+  status: { type: String, required: false, default: 'PENDING' },
   message: { type: String, required: false, default: null },
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now },
