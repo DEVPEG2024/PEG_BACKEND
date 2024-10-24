@@ -43,7 +43,7 @@ const OrderSchema: Schema = new Schema({
   ],
   total: { type: Number, required: true, default: 0 },
   orderNumber: { type: String, required: true, default: null },
-  paymentStatus: { type: String, required: true, default: "PENDING" },
+  paymentStatus: { type: String, required: true, default: 'PENDING' },
   status: { type: String, required: false, default: 'PENDING' },
   message: { type: String, required: false, default: null },
   createdAt: { type: Date, default: Date.now },
